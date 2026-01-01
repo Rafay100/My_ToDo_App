@@ -2,7 +2,23 @@
   "permissions": {
     "allow": [
       "Bash(python -m pytest:*)",
-      "Bash(python -m unittest:*)"
+      "Bash(python -m unittest:*)",
+      "Bash(git fetch:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File .specify/scripts/powershell/create-new-feature.ps1:*)",
+      "Bash(git checkout:*)",
+      "Bash(git rev-parse:*)",
+      "Skill(sp.implement)",
+      "Bash(xargs ls:*)",
+      "Bash(npm install:*)",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(python -c \"from sqlmodel import create_engine; from src.models.models import User, Todo; engine = create_engine\\(''postgresql://neondb_owner:npg_SQbKj35Atnqz@ep-wild-union-ad5a6uv9-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require''\\); SQLModel.metadata.create_all\\(engine\\)\")",
+      "Bash(PYTHONPATH=\"C:/Users/SYED RAFAY/Desktop/My_ToDo/backend\" python:*)",
+      "Bash(python:*)",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\backend''; venv\\\\Scripts\\\\python -c ''import fastapi; import sqlmodel; import uvicorn; print\\(\"\"Backend dependencies OK\"\"\\)''\")",
+      "Bash(powershell -Command \"cd 'C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\backend'; & 'venv\\\\Scripts\\\\python.exe' -c 'import fastapi; import sqlmodel; import uvicorn; print\\(\\\\\"Backend dependencies OK\\\\\"\\)'\":*)",
+      "Bash(powershell -Command \"cd ''C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\backend''; & ''venv\\\\Scripts\\\\python.exe'' debug_api.py\")",
+      "Bash(powershell -Command:*)"
     ]
   }
 }

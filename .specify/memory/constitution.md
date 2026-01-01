@@ -1,9 +1,16 @@
 <!--
   SYNC IMPACT REPORT
-  Version change: N/A → 1.0.0 (initial creation)
-  Added sections: 6 core principles, technology constraints, phase governance, quality standards
-  Removed sections: N/A (initial creation)
-  Templates requiring updates: None (templates are already consistent)
+  Version change: 1.0.0 -> 1.1.0
+  List of modified principles:
+    - IV. Technology Constraints (Updated matrix and rules)
+  Added sections:
+    - Phase II specific technologies (Better Auth, Neon Serverless PostgreSQL)
+  Removed sections:
+    - OpenAI Agents SDK and Kafka/Kubernetes (postponed to Phase III or removed per Phase II focus)
+  Templates requiring updates:
+    - .specify/templates/plan-template.md (✅ updated)
+    - .specify/templates/spec-template.md (✅ updated)
+    - .specify/templates/tasks-template.md (✅ updated)
   Follow-up TODOs: None
 -->
 
@@ -44,45 +51,48 @@ Agents MUST surface ambiguity rather than make assumptions. When requirements ar
 
 ### III. Phase Governance
 
-Each phase (I through V) is strictly scoped by its specification:
+Each phase is strictly scoped by its specification:
 
-- Features defined in Phase N specifications MUST NOT include capabilities planned for Phase N+1 or later.
-- Architecture evolves ONLY through updated specs and plans, never through incremental code decisions.
-- Phase boundaries are contractual - skipping phases requires explicit spec amendments.
+- **Phase I**: In-memory console application ONLY.
+- **Phase II**: Full-stack web application (Next.js, Python REST API, Neon PostgreSQL).
+- **Phase III and later**: Advanced cloud infrastructure, agents, AI, and orchestration.
 
-Future-phase features must never leak into earlier phases. This includes:
-- Database schemas designed for future capabilities
-- API endpoints supporting not-yet-implemented features
-- UI components for future user journeys
+Features defined in Phase N specifications MUST NOT include capabilities planned for Phase N+1 or later.
+Authentication, Web Frontend, and Neon PostgreSQL are EXPLICITLY ALLOWED starting Phase II.
+No AI or agent frameworks are allowed until Phase III or later.
 
-**Rationale**: Maintains project discipline and enables incremental value delivery.
+**Rationale**: Maintains project discipline and enables incremental value delivery through strictly isolated phases.
 
 ### IV. Technology Constraints
 
-All code MUST adhere to the following technology stack:
+All code MUST adhere to the following technology matrix:
 
-**Backend**: Python with FastAPI and SQLModel
-**Database**: Neon DB (PostgreSQL-compatible)
-**Agent Framework**: OpenAI Agents SDK
-**Integration Protocol**: MCP (Model Context Protocol)
+**Phase I (Legacy/Current foundation)**:
+- In-memory data storage
+- Console-based interaction
 
-**Frontend (Phase II+)**: Next.js
+**Phase II (Target)**:
+- **Backend**: Python REST API (FastAPI)
+- **Database**: Neon Serverless PostgreSQL
+- **ORM/Data layer**: SQLModel or equivalent
+- **Frontend**: Next.js (React, TypeScript)
+- **Authentication**: Better Auth (signup/signin)
+- **Architecture**: Full-stack web application
 
-**Infrastructure (Later Phases)**:
-- Docker for containerization
-- Kubernetes for orchestration
-- Kafka for event streaming
-- Dapr for distributed application runtime
+**Phase III and Later**:
+- Advanced cloud infrastructure
+- AI Orchestration and Agents
+- Distributed systems components
 
 Technology choices are fixed for the project duration. Introducing new technologies requires constitutional amendment.
 
-**Rationale**: Reduces cognitive load and ensures consistent architectural patterns.
+**Rationale**: Reduces cognitive load and ensures consistent architectural patterns while preserving phase isolation.
 
 ### V. Clean Architecture
 
 All code MUST follow clean architecture principles:
 
-- Clear separation of concerns (models, services, API, CLI)
+- Clear separation of concerns (models, services, API, UI)
 - Dependency inversion - inner layers cannot depend on outer layers
 - Business logic independent of frameworks, databases, and delivery mechanisms
 - Each component MUST be independently testable
@@ -100,35 +110,12 @@ Services MUST be designed for cloud-native deployment:
 
 **Rationale**: Ensures smooth deployment to modern cloud platforms and enables horizontal scaling.
 
-## Technology Stack
-
-### Core Technologies (All Phases)
-
-- **Language**: Python 3.11+
-- **Web Framework**: FastAPI
-- **ORM**: SQLModel
-- **Database**: Neon DB (PostgreSQL)
-- **Agent Framework**: OpenAI Agents SDK
-- **Integration**: MCP (Model Context Protocol)
-
-### Frontend Technologies (Phase II+)
-
-- **Framework**: Next.js
-- **Language**: TypeScript
-
-### Infrastructure Technologies (Phase III+)
-
-- **Containerization**: Docker
-- **Orchestration**: Kubernetes
-- **Event Streaming**: Kafka
-- **Distributed Runtime**: Dapr
-
 ## Quality Standards
 
 ### Code Quality
 
 - All code MUST pass linting and formatting checks
-- Type annotations REQUIRED for all Python code
+- Type annotations REQUIRED for all Python/TypeScript code
 - Docstrings REQUIRED for public APIs and complex functions
 - No hardcoded secrets or credentials - use environment variables
 
@@ -141,7 +128,7 @@ Services MUST be designed for cloud-native deployment:
 
 ### Security Standards
 
-- Authentication and authorization for all protected operations
+- Authentication and authorization for all protected operations (Phase II+)
 - Input validation at all system boundaries
 - Audit logging for security-relevant events
 - No secrets in source control
@@ -149,37 +136,31 @@ Services MUST be designed for cloud-native deployment:
 ## Development Workflow
 
 ### Phase 0: Research & Design
-
 - Explore existing codebase and dependencies
 - Define technical approach in plan.md
 - Identify interfaces and contracts
 
 ### Phase 1: Specification
-
 - Create user stories with acceptance criteria
 - Define functional requirements
 - Establish success metrics
 
 ### Phase 2: Planning
-
 - Make architectural decisions in plan.md
-- Define project structure
+- Define project structure (preserving phase separation)
 - Document complexity justifications
 
 ### Phase 3: Task Breakdown
-
 - Generate tasks.md from plan and spec
 - Organize by user story
 - Identify dependencies and parallel opportunities
 
 ### Phase 4: Implementation
-
 - Execute tasks in dependency order
 - Write tests first, ensure they fail
 - Implement to match spec exactly
 
 ### Phase 5: Validation
-
 - Verify all acceptance criteria met
 - Run full test suite
 - Update documentation
@@ -210,4 +191,4 @@ All work MUST be reviewed against this constitution:
 - Code reviews MUST verify architecture principles
 - Task acceptance MUST verify spec alignment
 
-**Version**: 1.0.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-29
+**Version**: 1.1.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-30

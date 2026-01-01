@@ -62,9 +62,9 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
+- [ ] T004 Setup Neon PostgreSQL schema and migrations (Phase II+)
+- [ ] T005 [P] Implement Better Auth signup/signin (Phase II+)
+- [ ] T006 [P] Setup FastAPI routing and middleware (Phase II+)
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
