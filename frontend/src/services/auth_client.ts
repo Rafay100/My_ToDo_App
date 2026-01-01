@@ -1,30 +1,56 @@
-// src/services/auth_client.ts
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
-export async function signupUser({ name, email, password }: { name: string; email: string; password: string }) {
+type SignupPayload = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+type SigninPayload = {
+  email: string;
+  password: string;
+};
+
+export async function signupUser({ name, email, password }: SignupPayload) {
+  try {
     const res = await fetch(`${API_URL}/api/v1/signup`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
-        credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, password }),
     });
+
     if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to sign up");
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.message || "Failed to sign up");
     }
-    return res.json();
+
+    return await res.json();
+  } catch (error) {
+    console.error("Signup network error:", error);
+    throw error;
+  }
 }
 
-export async function signinUser({ email, password }: { email: string; password: string }) {
+export async function signinUser({ email, password }: SigninPayload) {
+  try {
     const res = await fetch(`${API_URL}/api/v1/signin`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
+
     if (!res.ok) {
-        const error = await res.json();
-        throw new Error(error.message || "Failed to sign in");
+      const error = await res.json().catch(() => ({}));
+      throw new Error(error.message || "Failed to sign in");
     }
-    return res.json();
+
+    return await res.json();
+  } catch (error) {
+    console.error("Signin network error:", error);
+    throw error;
+  }
 }

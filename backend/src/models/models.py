@@ -6,8 +6,9 @@ from typing import List, Optional
 
 class User(SQLModel, table=True):
     id: Optional[UUID] = Field(default_factory=uuid4, primary_key=True)
+    name: Optional[str] = Field(default=None)
     email: str = Field(unique=True, index=True)
-    hashed_password: str = Column(String(128), nullable=False)  # bcrypt max length is 60
+    hashed_password: str = Field(sa_column=Column(String(128), nullable=False))
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     todos: List["Todo"] = Relationship(back_populates="user")

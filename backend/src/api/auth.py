@@ -54,7 +54,7 @@ def signup(data: SignupRequest, response: Response, session: Session = Depends(g
 
     # Create new user
     hashed_password = get_password_hash(data.password)
-    user = User(email=data.email, hashed_password=hashed_password)
+    user = User(name=data.name, email=data.email, hashed_password=hashed_password)
     session.add(user)
     session.commit()
     session.refresh(user)
