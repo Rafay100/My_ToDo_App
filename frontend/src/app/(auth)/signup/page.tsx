@@ -21,19 +21,16 @@ export default function Signup() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const { error } = await signupUser({
-                name,       // <-- include name
+            await signupUser({
+                name,
                 email,
                 password
             });
-            if (!error) {
-                router.push("/dashboard");
-            } else {
-                alert(error.message || "Failed to sign up");
-            }
+            // If successful, redirect to dashboard
+            router.push("/dashboard");
         } catch (err: any) {
-               console.error("Sign-up failed:", err);
-             alert(err.message || "An unexpected error occurred");
+            console.error("Sign-up failed:", err);
+            alert(err.message || "An unexpected error occurred");
         } finally {
             setIsLoading(false);
         }

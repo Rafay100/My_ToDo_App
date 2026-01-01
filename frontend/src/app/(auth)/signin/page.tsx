@@ -20,13 +20,10 @@ export default function Signin() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const { error } = await signinUser ({ email, password });
-            if (!error) {
-                router.push("/dashboard");
-            } else {
-                alert(error.message || "Failed to sign in");
-            }
-        } catch (err:any) {
+            await signinUser({ email, password });
+            // If successful, redirect to dashboard
+            router.push("/dashboard");
+        } catch (err: any) {
             console.error("Sign-in failed:", err);
             alert(err.message || "An unexpected error occurred");
         } finally {

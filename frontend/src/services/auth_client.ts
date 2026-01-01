@@ -18,6 +18,7 @@ export async function signupUser({ name, email, password }: SignupPayload) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ name, email, password }),
     });
 
@@ -40,6 +41,7 @@ export async function signinUser({ email, password }: SigninPayload) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify({ email, password }),
     });
 
