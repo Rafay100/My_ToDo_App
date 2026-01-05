@@ -29,7 +29,7 @@ export async function signupUser({ name, email, password }: SignupPayload) {
 
     return await res.json();
   } catch (error) {
-    console.error("Signup network error:", error);
+    // Re-throw error to be handled by caller
     throw error;
   }
 }
@@ -52,7 +52,7 @@ export async function signinUser({ email, password }: SigninPayload) {
 
     return await res.json();
   } catch (error) {
-    console.error("Signin network error:", error);
+    // Re-throw error to be handled by caller
     throw error;
   }
 }

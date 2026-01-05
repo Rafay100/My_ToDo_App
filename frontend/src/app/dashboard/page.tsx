@@ -30,8 +30,8 @@ export default function Dashboard() {
     try {
       const data = await todoApi.list();
       setTodos(Array.isArray(data) ? data : []);
-    } catch (error) {
-      console.error("Failed to load todos", error);
+    } catch {
+      // Silently handle error - UI shows empty state
       setTodos([]);
     } finally {
       setIsLoading(false);
@@ -47,9 +47,9 @@ export default function Dashboard() {
       });
 
       router.push("/signin");
-    } catch (err) {
-      console.error("Unexpected sign out error:", err);
-      router.push("/signin"); // Force redirect anyway
+    } catch {
+      // Force redirect even on error
+      router.push("/signin");
     }
   };
 
@@ -61,8 +61,8 @@ export default function Dashboard() {
       await todoApi.create(newTodo);
       setNewTodo("");
       await loadTodos();
-    } catch (error) {
-      console.error("Failed to add todo", error);
+    } catch {
+      // Silently handle error - user can retry
     } finally {
       setIsAdding(false);
     }
@@ -72,8 +72,8 @@ export default function Dashboard() {
     try {
       await todoApi.delete(id);
       setTodos(prev => prev.filter((t) => t.id !== id));
-    } catch (error) {
-      console.error("Failed to delete todo", error);
+    } catch {
+      // Silently handle error - optimistic update may fail
     }
   };
 
@@ -81,8 +81,7 @@ export default function Dashboard() {
     setTodos(prev => prev.map((t) => (t.id === id ? { ...t, is_completed } : t)));
     try {
       await todoApi.update(id, { is_completed });
-    } catch (error) {
-      console.error("Failed to update todo", error);
+    } catch {
       // Revert optimization on failure
       await loadTodos();
     }

@@ -24,7 +24,7 @@ export default function Signin() {
             // If successful, redirect to dashboard
             router.push("/dashboard");
         } catch (err: any) {
-            console.error("Sign-in failed:", err);
+            // Removed console.error - errors are handled via alert
             alert(err.message || "An unexpected error occurred");
         } finally {
             setIsLoading(false);

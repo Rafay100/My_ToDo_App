@@ -1,10 +1,5 @@
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000") + "/api/v1/todos";
 
-function getCookies(): string {
-    if (typeof document === 'undefined') return '';
-    return document.cookie;
-}
-
 export const todoApi = {
     list: async () => {
         const res = await fetch(API_BASE, {

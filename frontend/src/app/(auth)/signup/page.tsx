@@ -29,7 +29,7 @@ export default function Signup() {
             // If successful, redirect to dashboard
             router.push("/dashboard");
         } catch (err: any) {
-            console.error("Sign-up failed:", err);
+            // Removed console.error - errors are handled via alert
             alert(err.message || "An unexpected error occurred");
         } finally {
             setIsLoading(false);
