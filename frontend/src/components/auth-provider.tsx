@@ -4,7 +4,8 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 
 type AuthContextType = {
     session: any;
-    setSession: (session: any) => void;
+    // eslint-disable-next-line no-unused-vars
+    setSession: (value: any) => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);

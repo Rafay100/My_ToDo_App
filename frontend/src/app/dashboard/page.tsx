@@ -5,7 +5,7 @@ import { todoApi } from "@/services/todo_api";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Trash2, LogOut, Plus, Loader2, Moon, Sun, CheckCircle2, Circle } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -31,7 +31,6 @@ export default function Dashboard() {
       const data = await todoApi.list();
       setTodos(Array.isArray(data) ? data : []);
     } catch {
-      // Silently handle error - UI shows empty state
       setTodos([]);
     } finally {
       setIsLoading(false);
@@ -40,15 +39,12 @@ export default function Dashboard() {
 
   const handleSignout = async () => {
     try {
-      // Sign out from our backend
       await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/signout`, {
         method: "POST",
         credentials: "include",
       });
-
       router.push("/signin");
     } catch {
-      // Force redirect even on error
       router.push("/signin");
     }
   };
@@ -61,8 +57,6 @@ export default function Dashboard() {
       await todoApi.create(newTodo);
       setNewTodo("");
       await loadTodos();
-    } catch {
-      // Silently handle error - user can retry
     } finally {
       setIsAdding(false);
     }
@@ -71,18 +65,17 @@ export default function Dashboard() {
   const handleDelete = async (id: string) => {
     try {
       await todoApi.delete(id);
-      setTodos(prev => prev.filter((t) => t.id !== id));
+      setTodos(prev => prev.filter(t => t.id !== id));
     } catch {
-      // Silently handle error - optimistic update may fail
+      await loadTodos();
     }
   };
 
   const handleToggle = async (id: string, is_completed: boolean) => {
-    setTodos(prev => prev.map((t) => (t.id === id ? { ...t, is_completed } : t)));
+    setTodos(prev => prev.map(t => (t.id === id ? { ...t, is_completed } : t)));
     try {
       await todoApi.update(id, { is_completed });
     } catch {
-      // Revert optimization on failure
       await loadTodos();
     }
   };
@@ -90,7 +83,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       {/* Navbar */}
-      <nav className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+      <nav className="border-b bg-background/95 backdrop-blur sticky top-0 z-50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
@@ -121,7 +114,7 @@ export default function Dashboard() {
 
       {/* Main Content */}
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        {/* Header Section */}
+        {/* Header */}
         <div className="mb-8 sm:mb-12">
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-3 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             My Tasks
@@ -156,11 +149,7 @@ export default function Dashboard() {
                 className="h-12 px-6 gap-2 font-medium shadow-lg hover:shadow-xl transition-all"
                 size="lg"
               >
-                {isAdding ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <Plus className="h-5 w-5" />
-                )}
+                {isAdding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
                 <span className="hidden sm:inline">Add Task</span>
                 <span className="sm:hidden">Add</span>
               </Button>
@@ -190,7 +179,7 @@ export default function Dashboard() {
               </CardContent>
             </Card>
           ) : (
-            todos.map((todo) => (
+            todos.map(todo => (
               <Card
                 key={todo.id}
                 className="group border-2 hover:border-primary/50 hover:shadow-lg transition-all bg-card/50 backdrop-blur-sm"
@@ -203,9 +192,7 @@ export default function Dashboard() {
                   />
                   <span
                     className={`flex-grow text-base sm:text-lg font-medium transition-all select-none ${
-                      todo.is_completed
-                        ? "line-through text-muted-foreground/70"
-                        : "text-foreground"
+                      todo.is_completed ? "line-through text-muted-foreground/70" : "text-foreground"
                     }`}
                   >
                     {todo.title}
