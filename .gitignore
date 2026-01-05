@@ -41,10 +41,23 @@ env/
 .DS_Store
 Thumbs.db
 
+# Node
+node_modules/
+.next/
+out/
+.env*
+!.env.example
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
 # Testing
 .pytest_cache/
 .coverage
 htmlcov/
+coverage/
+jest.log
 
 # Temporary
 *.tmp
