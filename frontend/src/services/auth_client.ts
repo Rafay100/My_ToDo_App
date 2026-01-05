@@ -24,7 +24,7 @@ export async function signupUser({ name, email, password }: SignupPayload) {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
-      throw new Error(error.message || "Failed to sign up");
+      throw new Error(error.detail || error.message || "Failed to sign up");
     }
 
     return await res.json();
@@ -47,7 +47,7 @@ export async function signinUser({ email, password }: SigninPayload) {
 
     if (!res.ok) {
       const error = await res.json().catch(() => ({}));
-      throw new Error(error.message || "Failed to sign in");
+      throw new Error(error.detail || error.message || "Failed to sign in");
     }
 
     return await res.json();
