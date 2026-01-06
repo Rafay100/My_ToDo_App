@@ -1,13 +1,31 @@
-from src.main import app
+"""
+Vercel Python Serverless Function Entry Point
+Standalone FastAPI app for Vercel deployment
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
-# Simple test endpoint for Vercel
-@app.get("/api/health")
-def health_check():
-    return {"status": "ok", "message": "Backend is running"}
+app = FastAPI(title="Todo API Test")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to Evolution of Todo API"}
+    return {"message": "Welcome to Todo API - Python is working!"}
 
-# Export handler for Vercel
+@app.get("/api/health")
+def health():
+    return {"status": "ok"}
+
+@app.get("/api/test")
+def test():
+    return {"test": "success", "python": "working"}
+
+# Vercel handler
 handler = app
