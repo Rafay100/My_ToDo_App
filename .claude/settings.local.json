@@ -19,7 +19,9 @@
       "Bash(powershell -Command \"cd 'C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\backend'; & 'venv\\\\Scripts\\\\python.exe' -c 'import fastapi; import sqlmodel; import uvicorn; print\\(\\\\\"Backend dependencies OK\\\\\"\\)'\":*)",
       "Bash(powershell -Command \"cd ''C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\backend''; & ''venv\\\\Scripts\\\\python.exe'' debug_api.py\")",
       "Bash(powershell -Command:*)",
-      "mcp__Neon__run_sql"
+      "mcp__Neon__run_sql",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
