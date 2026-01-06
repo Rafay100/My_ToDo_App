@@ -63,3 +63,5 @@ jest.log
 # Temporary
 *.tmp
 *.log
+
+.vercel

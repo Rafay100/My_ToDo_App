@@ -21,7 +21,9 @@
       "Bash(powershell -Command:*)",
       "mcp__Neon__run_sql",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(set VERCEL_TOKEN=tV30nCBqoECJzL7NvAlmbpHm)",
+      "Bash(vercel:*)"
     ]
   }
 }
