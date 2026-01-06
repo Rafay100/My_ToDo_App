@@ -13,7 +13,10 @@ app.add_middleware(
         "http://localhost:3002", "http://127.0.0.1:3002",
         "https://frontend-silk-theta-40.vercel.app",
         "https://frontend-gwhyg6h8u-rafays-projects-66b7ce12.vercel.app",
-        "https://*.vercel.app"  # Allow all Vercel preview deployments
+        "https://my-to-do-hl66a01o3-rafays-projects-66b7ce12.vercel.app",  # Production frontend
+        "https://*.vercel.app",  # Allow all Vercel preview deployments
+        "http://127.0.0.1:8000",  # Local backend
+        "http://localhost:8000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
