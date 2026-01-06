@@ -26,6 +26,3 @@ def health():
 @app.get("/api/test")
 def test():
     return {"test": "success", "python": "working"}
-
-# Vercel handler
-handler = app
