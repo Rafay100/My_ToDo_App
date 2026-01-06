@@ -14,6 +14,13 @@ const nextConfig = {
     }
     // Ignore the telemetry module that uses dynamic code evaluation
     config.plugins = config.plugins || [];
+
+    // Add path aliases for Vercel compatibility
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': require('path').resolve(__dirname, 'src'),
+    };
+
     return config
   },
 }
