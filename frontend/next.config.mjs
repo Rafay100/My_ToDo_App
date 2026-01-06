@@ -1,4 +1,9 @@
 /** @type {import('next').NextConfig} */
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 const nextConfig = {
   experimental: {
     serverActions: {
@@ -18,7 +23,7 @@ const nextConfig = {
     // Add path aliases for Vercel compatibility
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@': require('path').resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, 'src'),
     };
 
     return config
