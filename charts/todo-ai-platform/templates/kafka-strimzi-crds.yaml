@@ -1,0 +1,152 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: kafkas.kafka.strimzi.io
+spec:
+  group: kafka.strimzi.io
+  names:
+    kind: Kafka
+    listKind: KafkaList
+    plural: kafkas
+    singular: kafka
+    categories:
+    - strimzi
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+    - name: Desired Kafka replicas
+      description: The desired number of Kafka replicas
+      jsonPath: .spec.kafka.replicas
+      type: integer
+    - name: Desired ZK replicas
+      description: The desired number of ZooKeeper replicas
+      jsonPath: .spec.zookeeper.replicas
+      type: integer
+    - name: Ready
+      description: The state of the custom resource
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      type: string
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              kafka:
+                type: object
+                properties:
+                  version:
+                    type: string
+                  replicas:
+                    type: integer
+                    minimum: 1
+                    maximum: 100
+                  listeners:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        port:
+                          type: integer
+                        type:
+                          type: string
+                        tls:
+                          type: boolean
+                  config:
+                    type: object
+                  storage:
+                    type: object
+                required:
+                - replicas
+                - listeners
+                - config
+                - storage
+              zookeeper:
+                type: object
+                properties:
+                  replicas:
+                    type: integer
+                    minimum: 1
+                    maximum: 100
+                  storage:
+                    type: object
+                required:
+                - replicas
+                - storage
+              entityOperator:
+                type: object
+                properties:
+                  topicOperator:
+                    type: object
+                  userOperator:
+                    type: object
+            required:
+            - kafka
+            - zookeeper
+            - entityOperator
+          status:
+            type: object
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: kafkatopics.kafka.strimzi.io
+spec:
+  group: kafka.strimzi.io
+  names:
+    kind: KafkaTopic
+    listKind: KafkaTopicList
+    plural: kafkatopics
+    singular: kafkatopic
+    categories:
+    - strimzi
+  scope: Namespaced
+  versions:
+  - name: v1beta2
+    served: true
+    storage: true
+    subresources:
+      status: {}
+    additionalPrinterColumns:
+    - name: Partition count
+      description: The number of partitions
+      jsonPath: .spec.partitions
+      type: integer
+    - name: Replication factor
+      description: The replication factor
+      jsonPath: .spec.replicas
+      type: integer
+    - name: Ready
+      description: The state of the custom resource
+      jsonPath: .status.conditions[?(@.type=="Ready")].status
+      type: string
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              partitions:
+                type: integer
+                minimum: 1
+                maximum: 10000
+              replicas:
+                type: integer
+                minimum: 1
+                maximum: 32767
+              config:
+                type: object
+            required:
+            - partitions
+            - replicas
+          status:
+            type: object

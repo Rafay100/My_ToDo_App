@@ -3,8 +3,10 @@ from sqlmodel import Session
 from uuid import UUID, uuid4
 from typing import Optional
 import json
+from datetime import datetime
 
-from ..models.message import MessageCreate, MessageRole
+from ..models.models import User  # Use existing User model
+from ..models.message import Message, MessageRole
 from ..services.ai_service import AIService
 from ..services.mcp_server import MCPServer
 from ..services.todo_operations import TodoOperationsService
@@ -63,7 +65,7 @@ async def chat_endpoint(
         return {
             "conversation_id": str(conversation_id),
             "response": ai_response,
-            "timestamp": ai_message.created_at.isoformat(),
+            "timestamp": datetime.now().isoformat(),
             "status": "success"
         }
 

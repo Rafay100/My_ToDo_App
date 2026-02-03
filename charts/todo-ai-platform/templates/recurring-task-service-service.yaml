@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "todo-ai-platform.fullname" . }}-recurring-task-service-svc
+  labels:
+    {{- include "todo-ai-platform.labels" . | nindent 4 }}
+    app: recurring-task-service
+spec:
+  type: {{ .Values.recurringTaskService.service.type }}
+  ports:
+    - port: {{ .Values.recurringTaskService.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "todo-ai-platform.selectorLabels" . | nindent 4 }}
+    app: recurring-task-service

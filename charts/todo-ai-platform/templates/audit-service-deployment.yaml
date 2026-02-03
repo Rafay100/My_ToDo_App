@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-ai-platform.fullname" . }}-audit-service
+  labels:
+    {{- include "todo-ai-platform.labels" . | nindent 4 }}
+    app: audit-service
+spec:
+  {{- if not .Values.auditService.autoscaling.enabled }}
+  replicas: {{ .Values.auditService.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "todo-ai-platform.selectorLabels" . | nindent 6 }}
+      app: audit-service
+  template:
+    metadata:
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "audit-service"
+        dapr.io/app-port: "{{ .Values.auditService.service.port }}"
+        dapr.io/config: "appconfig"
+        dapr.io/log-level: "info"
+        dapr.io/disable-builtin-k8s-secret-store: "true"
+      labels:
+        {{- include "todo-ai-platform.selectorLabels" . | nindent 8 }}
+        app: audit-service
+    spec:
+      {{- with .Values.auditService.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "todo-ai-platform.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.auditService.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-audit-service
+          securityContext:
+            {{- toYaml .Values.auditService.securityContext | nindent 12 }}
+          image: "{{ .Values.auditService.image.repository }}:{{ .Values.auditService.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.auditService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.auditService.service.port }}
+              protocol: TCP
+          env:
+            - name: DAPR_HTTP_ENDPOINT
+              value: "http://127.0.0.1:3500"
+            - name: DAPR_PUBSUB_NAME
+              value: "kafka-pubsub"
+            - name: DAPR_STATE_STORE
+              value: "postgresql-statestore"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          resources:
+            {{- toYaml .Values.auditService.resources | nindent 12 }}
+      {{- with .Values.auditService.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auditService.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.auditService.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

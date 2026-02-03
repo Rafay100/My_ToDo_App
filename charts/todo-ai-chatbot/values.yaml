@@ -1,0 +1,163 @@
+# Default values for todo-ai-chatbot
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global configurations
+global:
+  imageRegistry: ""
+  imagePullSecrets: []
+  storageClass: ""
+
+# Frontend configuration
+frontend:
+  replicaCount: 1
+  image:
+    repository: todo-frontend
+    pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: "todo-frontend"
+
+  serviceAccount:
+    create: true
+    annotations: {}
+    name: ""
+
+  podAnnotations: {}
+  podSecurityContext: {}
+    # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30100  # Specific NodePort to ensure accessibility
+
+  ingress:
+    enabled: false
+    className: ""
+    annotations: {}
+      # kubernetes.io/ingress.class: nginx
+      # kubernetes.io/tls-acme: "true"
+    hosts:
+      - host: chart-example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls: []
+
+  resources:
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+# Backend configuration
+backend:
+  replicaCount: 1
+  image:
+    repository: todo-backend
+    pullPolicy: IfNotPresent
+    tag: ""
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: "todo-backend"
+
+  service:
+    type: ClusterIP
+    port: 8000
+
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# MCP Server configuration
+mcpServer:
+  replicaCount: 1
+  image:
+    repository: todo-mcp-server
+    pullPolicy: IfNotPresent
+    tag: ""
+  imagePullSecrets: []
+  nameOverride: ""
+  fullnameOverride: "todo-mcp-server"
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+  resources:
+    limits:
+      cpu: 300m
+      memory: 256Mi
+    requests:
+      cpu: 150m
+      memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+# Database configuration (if needed)
+database:
+  host: localhost
+  port: 5432
+  name: todo_ai_chatbot
+  sslmode: require
+
+# OpenAI configuration
+openai:
+  apiKey: ""
+
+# Environment variables
+env:
+  NODE_ENV: production
+  PYTHON_ENV: production

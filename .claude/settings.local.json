@@ -23,7 +23,21 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(set VERCEL_TOKEN=tV30nCBqoECJzL7NvAlmbpHm)",
-      "Bash(vercel:*)"
+      "Bash(vercel:*)",
+      "Bash(uvicorn src.main:app --reload)",
+      "Bash(.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks)",
+      "Bash(find scripts/ -name \"*.sh\" -exec ls -la {} ;)",
+      "Bash(find docker/ -name \"Dockerfile*\" -exec ls -la {} ;)",
+      "Bash(minikube status)",
+      "Bash(chmod +x scripts/*.sh)",
+      "Bash(docker --version)",
+      "Bash(minikube version)",
+      "Bash(helm version)",
+      "Bash(where.exe docker)",
+      "Bash(find . -name \"*.md\" -path \"./specs/1-cloud-native-deployment/*\" -exec ls -la {} ;)",
+      "Bash(git add .)",
+      "Bash(git add charts/ docker/ scripts/ specs/1-cloud-native-deployment/ PHASE_IV_COMPLETION_REPORT.md history/prompts/cloud-native-deployment/ history/prompts/constitution/5-amend-constitution-for-phase-iv.constitution.prompt.md)",
+      "Bash(pip install -r requirements.txt)"
     ]
   }
 }

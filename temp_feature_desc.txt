@@ -1,0 +1,45 @@
+Create the Phase V specification for the "Advanced Cloud-Native Todo AI Platform".
+
+PHASE V GOAL:
+Extend the Todo AI Chatbot with advanced features and deploy it locally (Minikube) and to production-grade Kubernetes (AKS/GKE/OKE).
+
+PART A — ADVANCED FUNCTIONAL FEATURES:
+
+ADVANCED TODO FEATURES:
+1. Recurring tasks
+2. Due dates
+3. Scheduled reminders
+
+INTERMEDIATE FEATURES:
+4. Task priorities
+5. Tags
+6. Search
+7. Filter
+8. Sort
+
+EVENT-DRIVEN ARCHITECTURE:
+1. Kafka-based messaging
+2. Topics:
+   - task-events
+   - reminders
+   - task-updates
+3. Services:
+   - Notification Service
+   - Recurring Task Service
+   - Audit Log Service
+   - Optional WebSocket Sync Service
+
+DAPR REQUIREMENTS:
+1. Pub/Sub abstraction over Kafka
+2. State management (PostgreSQL)
+3. Service invocation
+4. Jobs API or Cron bindings
+5. Secrets management
+
+PART B — LOCAL DEPLOYMENT:
+1. Minikube deployment
+2. Dapr installed on Minikube
+3. Kafka running locally (Strimzi or Redpanda)
+4. Full Dapr feature usage
+
+PART C — CLOUD DEPL

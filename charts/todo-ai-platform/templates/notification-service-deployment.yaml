@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-ai-platform.fullname" . }}-notification-service
+  labels:
+    {{- include "todo-ai-platform.labels" . | nindent 4 }}
+    app: notification-service
+spec:
+  {{- if not .Values.notificationService.autoscaling.enabled }}
+  replicas: {{ .Values.notificationService.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "todo-ai-platform.selectorLabels" . | nindent 6 }}
+      app: notification-service
+  template:
+    metadata:
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "notification-service"
+        dapr.io/app-port: "{{ .Values.notificationService.service.port }}"
+        dapr.io/config: "appconfig"
+        dapr.io/log-level: "info"
+        dapr.io/disable-builtin-k8s-secret-store: "true"
+      labels:
+        {{- include "todo-ai-platform.selectorLabels" . | nindent 8 }}
+        app: notification-service
+    spec:
+      {{- with .Values.notificationService.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "todo-ai-platform.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.notificationService.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-notification-service
+          securityContext:
+            {{- toYaml .Values.notificationService.securityContext | nindent 12 }}
+          image: "{{ .Values.notificationService.image.repository }}:{{ .Values.notificationService.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.notificationService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.notificationService.service.port }}
+              protocol: TCP
+          env:
+            - name: DAPR_HTTP_ENDPOINT
+              value: "http://127.0.0.1:3500"
+            - name: DAPR_PUBSUB_NAME
+              value: "kafka-pubsub"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          resources:
+            {{- toYaml .Values.notificationService.resources | nindent 12 }}
+      {{- with .Values.notificationService.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notificationService.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.notificationService.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

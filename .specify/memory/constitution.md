@@ -1,18 +1,18 @@
 <!--
   SYNC IMPACT REPORT
-  Version change: 1.1.0 -> 1.2.0
+  Version change: 1.3.0 -> 1.4.0
   List of modified principles:
-    - IV. Technology Constraints (Updated Phase III matrix and rules)
+    - IV. Technology Constraints (Updated to add Phase V matrix and rules)
   Added sections:
-    - Phase III specific technologies (OpenAI ChatKit, OpenAI Agents SDK, MCP SDK)
-    - Phase III architecture rules (Stateless AI-driven system, MCP tools)
-    - Phase III constraints (No server-side session memory, no background workers, etc.)
+    - Phase V specific technologies (Event-driven microservices, Kafka, Dapr, Cloud deployment)
+    - Phase V architecture rules (Event-driven, Dapr integration, Cloud-native observability)
+    - Phase V constraints (CI/CD allowed, Manual coding restrictions)
   Removed sections:
-    - Vague "Advanced cloud infrastructure" and "Distributed systems" from Phase III
+    - None
   Templates requiring updates:
-    - .specify/templates/plan-template.md (✅ updated)
-    - .specify/templates/spec-template.md (✅ updated)
-    - .specify/templates/tasks-template.md (✅ updated)
+    - .specify/templates/plan-template.md (⚠ pending)
+    - .specify/templates/spec-template.md (⚠ pending)
+    - .specify/templates/tasks-template.md (⚠ pending)
   Follow-up TODOs: None
 -->
 
@@ -58,10 +58,15 @@ Each phase is strictly scoped by its specification:
 - **Phase I**: In-memory console application ONLY.
 - **Phase II**: Full-stack web application (Next.js, Python REST API, Neon PostgreSQL).
 - **Phase III**: AI-powered todo chatbot with OpenAI Agents SDK, MCP tools, and stateless architecture.
+- **Phase IV**: Cloud-native, containerized deployment with local Kubernetes.
+- **Phase V**: Event-driven microservices with Dapr runtime abstraction and cloud deployment.
 
 Features defined in Phase N specifications MUST NOT include capabilities planned for Phase N+1 or later.
 Authentication, Web Frontend, and Neon PostgreSQL are EXPLICITLY ALLOWED starting Phase II.
 No AI or agent frameworks are allowed until Phase III or later.
+No Kubernetes or containerization is allowed until Phase IV or later.
+No event-driven architecture or Dapr is allowed until Phase V or later.
+No CI/CD pipelines are allowed until Phase V or later.
 
 **Rationale**: Maintains project discipline and enables incremental value delivery through strictly isolated phases.
 
@@ -100,6 +105,42 @@ All code MUST adhere to the following technology matrix:
   - No server-side session memory
   - No background workers
   - No real-time streaming
+  - No future phase orchestration or infrastructure
+
+**Phase IV (Containerized Deployment)**:
+- **Deployment Environment**: Local Kubernetes
+- **Kubernetes Distribution**: Minikube
+- **Containerization**: Docker (Docker Desktop)
+- **Package Manager**: Helm Charts
+- **AI DevOps Tools**: Docker AI Agent (Gordon), kubectl-ai, Kagent
+- **Architecture**: Cloud-native, containerized, declarative deployment
+- **Rules**:
+  - Kubernetes usage is allowed starting Phase IV
+  - Helm charts are mandatory in Phase IV
+  - Container images must be built before deployment
+  - AI-assisted DevOps tools (Gordon, kubectl-ai, Kagent) are allowed
+  - Deployment must be local-only (Minikube)
+  - No managed cloud services
+  - No CI/CD pipelines
+  - No future phase orchestration or infrastructure
+
+**Phase V (Event-Driven Cloud-Native)**:
+- **Deployment Targets**:
+  - Local: Minikube
+  - Cloud: AKS (Azure) or GKE (Google Cloud) or OKE (Oracle Cloud)
+- **Architecture**: Event-driven microservices
+- **Messaging**: Kafka (self-hosted via Strimzi or managed via Redpanda/Confluent)
+- **Runtime Abstraction**: Dapr (Full feature set)
+- **CI/CD**: GitHub Actions
+- **Observability**: Cloud-native logging and monitoring
+- **Packaging**: Helm Charts (reused from Phase IV)
+- **Rules**:
+  - Event-driven architecture is mandatory in Phase V
+  - Kafka must be integrated via Dapr Pub/Sub
+  - Dapr must be used for Pub/Sub, State, Service Invocation, Jobs/Cron, Secrets
+  - Cloud deployment must reuse Helm charts from Phase IV
+  - CI/CD is allowed starting Phase V
+  - No manual coding outside of specified tools and frameworks
   - No future phase orchestration or infrastructure
 
 Technology choices are fixed for the project duration. Introducing new technologies requires constitutional amendment.
@@ -209,4 +250,4 @@ All work MUST be reviewed against this constitution:
 - Code reviews MUST verify architecture principles
 - Task acceptance MUST verify spec alignment
 
-**Version**: 1.2.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2026-01-20
+**Version**: 1.4.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2026-02-04

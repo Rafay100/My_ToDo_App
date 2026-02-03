@@ -1,3 +1,5 @@
+'use client';
+
 /**
  * ChatInterface component using OpenAI ChatKit
  * Sets up the chat UI and integrates with the API client

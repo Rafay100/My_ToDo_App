@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-ai-chatbot.fullname" . }}-mcp-server
+  labels:
+    {{- include "todo-ai-chatbot.labels" . | nindent 4 }}
+    app: todo-mcp-server
+spec:
+  {{- if not .Values.mcpServer.autoscaling.enabled }}
+  replicas: {{ .Values.mcpServer.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "todo-ai-chatbot.selectorLabels" . | nindent 6 }}
+      app: todo-mcp-server
+  template:
+    metadata:
+      {{- with .Values.mcpServer.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "todo-ai-chatbot.selectorLabels" . | nindent 8 }}
+        app: todo-mcp-server
+    spec:
+      {{- with .Values.mcpServer.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "todo-ai-chatbot.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.mcpServer.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-mcp-server
+          securityContext:
+            {{- toYaml .Values.mcpServer.securityContext | nindent 12 }}
+          image: "{{ .Values.global.imageRegistry }}{{ .Values.mcpServer.image.repository }}:{{ .Values.mcpServer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.mcpServer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.mcpServer.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+          resources:
+            {{- toYaml .Values.mcpServer.resources | nindent 12 }}
+          env:
+            - name: PYTHON_ENV
+              value: {{ .Values.env.PYTHON_ENV | quote }}
+            - name: DATABASE_URL
+              value: {{ .Values.database.host | quote }}
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: todo-secrets
+                  key: openai-api-key
+      {{- with .Values.mcpServer.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mcpServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.mcpServer.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

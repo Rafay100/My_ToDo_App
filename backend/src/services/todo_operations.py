@@ -1,10 +1,10 @@
 from sqlmodel import Session, select
 from typing import List, Optional
 from uuid import UUID
-from ..models.task import Task, TaskCreate, TaskUpdate, TaskStatus
+from ..models.models import User, Todo  # Use existing models
+from ..models.task_update import TaskUpdate  # Use our custom model
 from ..models.conversation import Conversation, ConversationCreate
 from ..models.message import Message, MessageCreate, MessageRole
-from ..models.user import User
 
 
 class TodoOperationsService:
@@ -13,26 +13,31 @@ class TodoOperationsService:
     def __init__(self, session: Session):
         self.session = session
 
-    def add_task(self, user_id: UUID, title: str, description: Optional[str] = None) -> Task:
-        """Add a new task for a user"""
-        task = Task(
+    def add_task(self, user_id: UUID, title: str, description: Optional[str] = None) -> Todo:
+        """Add a new task for a user using existing Todo model"""
+        task = Todo(
             title=title,
-            description=description,
-            user_id=user_id
+            user_id=user_id,
+            is_completed=False  # Default to not completed
         )
         self.session.add(task)
         self.session.commit()
         self.session.refresh(task)
         return task
 
-    def list_tasks(self, user_id: UUID, status_filter: Optional[str] = None) -> List[Task]:
-        """List tasks for a user, optionally filtered by status"""
-        query = select(Task).where(Task.user_id == user_id)
+    def list_tasks(self, user_id: UUID, status_filter: Optional[str] = None) -> List[Todo]:
+        """List tasks for a user, optionally filtered by status using existing Todo model"""
+        query = select(Todo).where(Todo.user_id == user_id)
 
+        # Note: The existing Todo model doesn't have a status field, only is_completed
+        # So we'll adapt to the existing schema
         if status_filter:
             try:
-                status = TaskStatus(status_filter.lower())
-                query = query.where(Task.status == status)
+                # Convert status filter to boolean for is_completed
+                if status_filter.lower() in ['completed', 'true']:
+                    query = query.where(Todo.is_completed == True)
+                elif status_filter.lower() in ['active', 'false', 'pending']:
+                    query = query.where(Todo.is_completed == False)
             except ValueError:
                 # If invalid status, ignore the filter
                 pass
@@ -40,37 +45,28 @@ class TodoOperationsService:
         tasks = self.session.exec(query).all()
         return tasks
 
-    def update_task(self, task_id: UUID, updates: TaskUpdate) -> Optional[Task]:
-        """Update an existing task"""
-        task = self.session.get(Task, task_id)
+    def update_task(self, task_id: UUID, updates: TaskUpdate) -> Optional[Todo]:
+        """Update an existing task using existing Todo model"""
+        task = self.session.get(Todo, task_id)
         if not task:
             return None
 
-        # Apply updates
-        for field, value in updates.dict(exclude_unset=True).items():
-            setattr(task, field, value)
-
-        # If status is being updated to completed, set completed_at
-        if updates.status == TaskStatus.COMPLETED and task.status != TaskStatus.COMPLETED:
-            from datetime import datetime
-            task.completed_at = datetime.now()
-        elif updates.status == TaskStatus.ACTIVE:
-            task.completed_at = None
+        # Apply updates - only update title if provided
+        if updates.title:
+            task.title = updates.title
 
         self.session.add(task)
         self.session.commit()
         self.session.refresh(task)
         return task
 
-    def complete_task(self, task_id: UUID) -> Optional[Task]:
-        """Mark a task as completed"""
-        task = self.session.get(Task, task_id)
+    def complete_task(self, task_id: UUID) -> Optional[Todo]:
+        """Mark a task as completed using existing Todo model"""
+        task = self.session.get(Todo, task_id)
         if not task:
             return None
 
-        task.status = TaskStatus.COMPLETED
-        from datetime import datetime
-        task.completed_at = datetime.now()
+        task.is_completed = True
 
         self.session.add(task)
         self.session.commit()
@@ -78,8 +74,8 @@ class TodoOperationsService:
         return task
 
     def delete_task(self, task_id: UUID) -> bool:
-        """Delete a task"""
-        task = self.session.get(Task, task_id)
+        """Delete a task using existing Todo model"""
+        task = self.session.get(Todo, task_id)
         if not task:
             return False
 

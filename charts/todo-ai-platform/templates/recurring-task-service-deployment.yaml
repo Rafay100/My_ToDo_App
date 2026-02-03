@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "todo-ai-platform.fullname" . }}-recurring-task-service
+  labels:
+    {{- include "todo-ai-platform.labels" . | nindent 4 }}
+    app: recurring-task-service
+spec:
+  {{- if not .Values.recurringTaskService.autoscaling.enabled }}
+  replicas: {{ .Values.recurringTaskService.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "todo-ai-platform.selectorLabels" . | nindent 6 }}
+      app: recurring-task-service
+  template:
+    metadata:
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "recurring-task-service"
+        dapr.io/app-port: "{{ .Values.recurringTaskService.service.port }}"
+        dapr.io/config: "appconfig"
+        dapr.io/log-level: "info"
+        dapr.io/disable-builtin-k8s-secret-store: "true"
+      labels:
+        {{- include "todo-ai-platform.selectorLabels" . | nindent 8 }}
+        app: recurring-task-service
+    spec:
+      {{- with .Values.recurringTaskService.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "todo-ai-platform.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.recurringTaskService.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-recurring-task-service
+          securityContext:
+            {{- toYaml .Values.recurringTaskService.securityContext | nindent 12 }}
+          image: "{{ .Values.recurringTaskService.image.repository }}:{{ .Values.recurringTaskService.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.recurringTaskService.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.recurringTaskService.service.port }}
+              protocol: TCP
+          env:
+            - name: DAPR_HTTP_ENDPOINT
+              value: "http://127.0.0.1:3500"
+            - name: DAPR_PUBSUB_NAME
+              value: "kafka-pubsub"
+            - name: DAPR_STATE_STORE
+              value: "postgresql-statestore"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: http
+          resources:
+            {{- toYaml .Values.recurringTaskService.resources | nindent 12 }}
+      {{- with .Values.recurringTaskService.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.recurringTaskService.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.recurringTaskService.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
