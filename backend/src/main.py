@@ -2,8 +2,10 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from src.api import todos, auth
+from src.api.chat_endpoint import router as chat_router
+from src.services.database_service import create_db_and_tables
 
-app = FastAPI(title="Evolution of Todo API")
+app = FastAPI(title="Todo AI Chatbot API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -23,6 +25,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.on_event("startup")
+def on_startup():
+    """Create database tables on startup"""
+    create_db_and_tables()
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     return JSONResponse(
@@ -32,7 +39,13 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.include_router(todos.router, prefix="/api/v1")
 app.include_router(auth.router)
+app.include_router(chat_router)  # Include the chat router for AI functionality
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to Evolution of Todo API"}
+    return {"message": "Welcome to Evolution of Todo AI Chatbot API"}
+
+@app.get("/health")
+def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy"}

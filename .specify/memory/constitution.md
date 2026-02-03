@@ -1,12 +1,14 @@
 <!--
   SYNC IMPACT REPORT
-  Version change: 1.0.0 -> 1.1.0
+  Version change: 1.1.0 -> 1.2.0
   List of modified principles:
-    - IV. Technology Constraints (Updated matrix and rules)
+    - IV. Technology Constraints (Updated Phase III matrix and rules)
   Added sections:
-    - Phase II specific technologies (Better Auth, Neon Serverless PostgreSQL)
+    - Phase III specific technologies (OpenAI ChatKit, OpenAI Agents SDK, MCP SDK)
+    - Phase III architecture rules (Stateless AI-driven system, MCP tools)
+    - Phase III constraints (No server-side session memory, no background workers, etc.)
   Removed sections:
-    - OpenAI Agents SDK and Kafka/Kubernetes (postponed to Phase III or removed per Phase II focus)
+    - Vague "Advanced cloud infrastructure" and "Distributed systems" from Phase III
   Templates requiring updates:
     - .specify/templates/plan-template.md (✅ updated)
     - .specify/templates/spec-template.md (✅ updated)
@@ -55,7 +57,7 @@ Each phase is strictly scoped by its specification:
 
 - **Phase I**: In-memory console application ONLY.
 - **Phase II**: Full-stack web application (Next.js, Python REST API, Neon PostgreSQL).
-- **Phase III and later**: Advanced cloud infrastructure, agents, AI, and orchestration.
+- **Phase III**: AI-powered todo chatbot with OpenAI Agents SDK, MCP tools, and stateless architecture.
 
 Features defined in Phase N specifications MUST NOT include capabilities planned for Phase N+1 or later.
 Authentication, Web Frontend, and Neon PostgreSQL are EXPLICITLY ALLOWED starting Phase II.
@@ -78,15 +80,31 @@ All code MUST adhere to the following technology matrix:
 - **Frontend**: Next.js (React, TypeScript)
 - **Authentication**: Better Auth (signup/signin)
 - **Architecture**: Full-stack web application
+- **API Style**: REST APIs
+- **Constraints**: No AI or agents
 
-**Phase III and Later**:
-- Advanced cloud infrastructure
-- AI Orchestration and Agents
-- Distributed systems components
+**Phase III (Advanced)**:
+- **Frontend**: OpenAI ChatKit
+- **Backend**: Python FastAPI
+- **AI Framework**: OpenAI Agents SDK
+- **MCP Server**: Official MCP SDK
+- **ORM/Data Layer**: SQLModel
+- **Database**: Neon Serverless PostgreSQL
+- **Authentication**: Better Auth
+- **Architecture**: Stateless AI-driven system using MCP tools
+- **Rules**:
+  - AI agents are allowed starting Phase III
+  - MCP (Model Context Protocol) is allowed starting Phase III
+  - Stateless server architecture is required in Phase III
+  - All AI state must be persisted in the database
+  - No server-side session memory
+  - No background workers
+  - No real-time streaming
+  - No future phase orchestration or infrastructure
 
 Technology choices are fixed for the project duration. Introducing new technologies requires constitutional amendment.
 
-**Rationale**: Reduces cognitive load and ensures consistent architectural patterns while preserving phase isolation.
+**Rationale**: Reduces cognitive load and ensures consistent architectural patterns while preserving strict phase isolation.
 
 ### V. Clean Architecture
 
@@ -191,4 +209,4 @@ All work MUST be reviewed against this constitution:
 - Code reviews MUST verify architecture principles
 - Task acceptance MUST verify spec alignment
 
-**Version**: 1.1.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2025-12-30
+**Version**: 1.2.0 | **Ratified**: 2025-12-29 | **Last Amended**: 2026-01-20

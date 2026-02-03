@@ -1,0 +1,138 @@
+# API Contracts: Todo AI Chatbot
+
+## Chat Endpoint
+
+### POST /api/{user_id}/chat
+
+**Description**: Main endpoint for chat interactions with the AI agent
+
+**Path Parameters**:
+- `user_id`: UUID - The unique identifier of the user
+
+**Request Body**:
+```json
+{
+  "message": "string",
+  "conversation_id": "UUID (optional)",
+  "metadata": "object (optional)"
+}
+```
+
+**Response**:
+```json
+{
+  "conversation_id": "UUID",
+  "response": "string",
+  "timestamp": "ISO 8601 datetime",
+  "status": "success | error"
+}
+```
+
+**Error Responses**:
+- `400 Bad Request`: Invalid request format
+- `404 Not Found`: User or conversation not found
+- `500 Internal Server Error`: Processing error
+
+**Headers**:
+- `Content-Type: application/json`
+- `Authorization: Bearer <token>` (when authentication is implemented)
+
+## MCP Tool Contracts
+
+### add_task
+**Description**: Creates a new task in the database
+**Input Schema**:
+```json
+{
+  "user_id": "UUID",
+  "title": "string",
+  "description": "string (optional)"
+}
+```
+**Output Schema**:
+```json
+{
+  "task_id": "UUID",
+  "status": "created",
+  "message": "string"
+}
+```
+
+### list_tasks
+**Description**: Retrieves all tasks for a user
+**Input Schema**:
+```json
+{
+  "user_id": "UUID",
+  "status_filter": "string (optional, 'active' or 'completed')"
+}
+```
+**Output Schema**:
+```json
+{
+  "tasks": [
+    {
+      "id": "UUID",
+      "title": "string",
+      "description": "string",
+      "status": "string",
+      "created_at": "ISO 8601 datetime"
+    }
+  ],
+  "status": "success"
+}
+```
+
+### update_task
+**Description**: Updates an existing task
+**Input Schema**:
+```json
+{
+  "task_id": "UUID",
+  "title": "string (optional)",
+  "description": "string (optional)",
+  "status": "string (optional)"
+}
+```
+**Output Schema**:
+```json
+{
+  "task_id": "UUID",
+  "status": "updated",
+  "message": "string"
+}
+```
+
+### complete_task
+**Description**: Marks a task as completed
+**Input Schema**:
+```json
+{
+  "task_id": "UUID"
+}
+```
+**Output Schema**:
+```json
+{
+  "task_id": "UUID",
+  "status": "completed",
+  "message": "string"
+}
+```
+
+### delete_task
+**Description**: Removes a task from the database
+**Input Schema**:
+```json
+{
+  "task_id": "UUID"
+}
+```
+**Output Schema**:
+```json
+{
+  "task_id": "UUID",
+  "status": "deleted",
+  "message": "string"
+}
+```
