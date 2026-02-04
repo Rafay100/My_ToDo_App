@@ -2,7 +2,7 @@ const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000") + 
 
 export const todoApi = {
     list: async () => {
-        const res = await fetch(API_BASE, {
+        const res = await fetch(API_BASE + "/", {
             headers: {
                 "Accept": "application/json",
             },
@@ -12,7 +12,7 @@ export const todoApi = {
         return res.json();
     },
     create: async (title: string) => {
-        const res = await fetch(API_BASE + `?title=${encodeURIComponent(title)}`, {
+        const res = await fetch(API_BASE + `/?title=${encodeURIComponent(title)}`, {
             method: "POST",
             headers: {
                 "Accept": "application/json",

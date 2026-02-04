@@ -27,11 +27,12 @@ class ApiClient {
    */
   async sendChatMessage(userId: string, message: string, conversationId?: string): Promise<ChatResponse> {
     try {
-      const response = await fetch(`${this.baseUrl}/api/${userId}/chat`, {
+      const response = await fetch(`${this.baseUrl}/api/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
         body: JSON.stringify({
           message,
           conversation_id: conversationId,
@@ -39,7 +40,8 @@ class ApiClient {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
       }
 
       const data: ChatResponse = await response.json();
@@ -55,15 +57,17 @@ class ApiClient {
    */
   async getConversationHistory(userId: string, conversationId: string) {
     try {
-      const response = await fetch(`${this.baseUrl}/api/${userId}/conversations/${conversationId}`, {
+      const response = await fetch(`${this.baseUrl}/api/conversations/${conversationId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include cookies for authentication
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.detail || `HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();

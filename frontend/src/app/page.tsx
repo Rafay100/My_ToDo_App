@@ -1,54 +1,27 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import ChatInterface from '../components/ChatInterface';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../components/auth-provider';
+import HomePage from './home-page';
+import AppLayout from '../components/AppLayout';
+import EnhancedChatInterface from '../components/EnhancedChatInterface';
 
 export default function Home() {
-  const [userId, setUserId] = useState<string>('');
+  const router = useRouter();
+  const { session } = useAuth();
 
+  // If user is authenticated, redirect to dashboard
   useEffect(() => {
-    // Generate or retrieve user ID
-    // In a real app, this would come from authentication
-    const storedUserId = localStorage.getItem('todo_user_id');
-
-    if (storedUserId) {
-      setUserId(storedUserId);
-    } else {
-      // Generate a random user ID for demo purposes
-      const newUserId = typeof window !== 'undefined' && window.crypto && window.crypto.randomUUID
-        ? crypto.randomUUID()
-        : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('todo_user_id', newUserId);
-      setUserId(newUserId);
+    if (session) {
+      router.push('/dashboard');
     }
-  }, []);
+  }, [session, router]);
 
-  if (!userId) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
+  // If not authenticated, show the homepage
+  if (session) {
+    return null; // Will redirect via useEffect
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        <header className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">AI-Powered Todo Assistant</h1>
-          <p className="text-gray-600">
-            Manage your tasks with natural language commands
-          </p>
-        </header>
-
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <ChatInterface userId={userId} />
-        </div>
-
-        <footer className="mt-8 text-center text-gray-500 text-sm">
-          <p>Your conversations are securely stored and processed.</p>
-        </footer>
-      </div>
-    </div>
-  );
+  return <HomePage />;
 }

@@ -16,22 +16,36 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
+import { useAuth } from "@/components/auth-provider";
 
 export default function Signup() {
-  const [name, setName] = useState("");  
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const { setSession } = useAuth();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      await signupUser({ name, email, password });
+      const result = await signupUser({ name, email, password });
+      // Update the session manually to reflect the login state
+      const sessionData = {
+        user: { name, email, id: result.user_id },
+        timestamp: Date.now()
+      };
+      setSession(sessionData);
+
       router.push("/dashboard"); // redirect on success
     } catch (err: any) {
-      alert(err.message || "An unexpected error occurred");
+      // Handle network errors and API errors differently
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        alert("Network error: Unable to connect to the server. Please check if the backend server is running.");
+      } else {
+        alert(err.message || "An unexpected error occurred during signup");
+      }
     } finally {
       setIsLoading(false);
     }

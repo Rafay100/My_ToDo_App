@@ -37,7 +37,20 @@
       "Bash(find . -name \"*.md\" -path \"./specs/1-cloud-native-deployment/*\" -exec ls -la {} ;)",
       "Bash(git add .)",
       "Bash(git add charts/ docker/ scripts/ specs/1-cloud-native-deployment/ PHASE_IV_COMPLETION_REPORT.md history/prompts/cloud-native-deployment/ history/prompts/constitution/5-amend-constitution-for-phase-iv.constitution.prompt.md)",
-      "Bash(pip install -r requirements.txt)"
+      "Bash(pip install -r requirements.txt)",
+      "Bash(dir C:UsersSYED RAFAYDesktopMy_ToDofrontendsrcapp /s)",
+      "Bash(dir \"C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\frontend\\\\src\\\\app\" /s)",
+      "Bash(dir \"C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\frontend\\\\src\\\\app\\\\auth\")",
+      "Bash(dir \"C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\frontend\\\\src\\\\app\\\\\\(auth\\)\")",
+      "Bash(dir \"C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\frontend\\\\src\\\\app\\\\\\(auth\\)\" /s)",
+      "Bash(dir \"C:\\\\Users\\\\SYED RAFAY\\\\Desktop\\\\My_ToDo\\\\frontend\\\\src\\\\app\\\\\\(auth\\)\\\\signin\")",
+      "Bash(dir *.env*)",
+      "Bash(dir frontend)",
+      "Bash(dir backend)",
+      "Bash(dir)",
+      "Bash(dir frontendsrcappdashboard)",
+      "Bash(dir frontendsrcappdashboard*)",
+      "Bash(timeout 5 ping -n 1 localhost)"
     ]
   }
 }

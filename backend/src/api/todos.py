@@ -11,13 +11,17 @@ router = APIRouter(prefix="/todos", tags=["todos"])
 
 @router.get("/", response_model=List[Todo])
 def list_todos(session: Session = Depends(get_session), user_id: str = Depends(get_current_user)):
-    statement = select(Todo).where(Todo.user_id == UUID(user_id))
+    from uuid import UUID
+    user_uuid = UUID(user_id)
+    statement = select(Todo).where(Todo.user_id == user_uuid)
     results = session.exec(statement)
     return results.all()
 
 @router.post("/", response_model=Todo, status_code=status.HTTP_201_CREATED)
 def create_todo(title: str, session: Session = Depends(get_session), user_id: str = Depends(get_current_user)):
-    todo = Todo(title=title, user_id=UUID(user_id))
+    from uuid import UUID
+    user_uuid = UUID(user_id)
+    todo = Todo(title=title, user_id=user_uuid)
     session.add(todo)
     session.commit()
     session.refresh(todo)
@@ -25,8 +29,10 @@ def create_todo(title: str, session: Session = Depends(get_session), user_id: st
 
 @router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_todo(id: UUID, session: Session = Depends(get_session), user_id: str = Depends(get_current_user)):
+    from uuid import UUID
+    user_uuid = UUID(user_id)
     todo = session.get(Todo, id)
-    if not todo or todo.user_id != UUID(user_id):
+    if not todo or todo.user_id != user_uuid:
         raise HTTPException(status_code=404, detail="Todo not found")
     session.delete(todo)
     session.commit()
@@ -34,8 +40,10 @@ def delete_todo(id: UUID, session: Session = Depends(get_session), user_id: str 
 
 @router.patch("/{id}", response_model=Todo)
 def update_todo(id: UUID, title: Optional[str] = None, is_completed: Optional[bool] = None, session: Session = Depends(get_session), user_id: str = Depends(get_current_user)):
+    from uuid import UUID
+    user_uuid = UUID(user_id)
     todo = session.get(Todo, id)
-    if not todo or todo.user_id != UUID(user_id):
+    if not todo or todo.user_id != user_uuid:
         raise HTTPException(status_code=404, detail="Todo not found")
     if title is not None:
         todo.title = title

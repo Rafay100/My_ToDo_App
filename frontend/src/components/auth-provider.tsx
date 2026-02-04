@@ -4,24 +4,43 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 
 type AuthContextType = {
     session: any;
-    // eslint-disable-next-line no-unused-vars
     setSession: (value: any) => void;
+    clearSession: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [session, setSession] = useState<any>(null);
+    const [session, setSessionState] = useState<any>(null);
+
+    const setSession = (value: any) => {
+        setSessionState(value);
+        if (value) {
+            localStorage.setItem("session", JSON.stringify(value));
+        } else {
+            localStorage.removeItem("session");
+        }
+    };
+
+    const clearSession = () => {
+        setSessionState(null);
+        localStorage.removeItem("session");
+    };
 
     useEffect(() => {
         const storedSession = localStorage.getItem("session");
         if (storedSession) {
-            setSession(JSON.parse(storedSession));
+            try {
+                setSessionState(JSON.parse(storedSession));
+            } catch (e) {
+                console.error("Error parsing session from localStorage:", e);
+                localStorage.removeItem("session");
+            }
         }
     }, []);
 
     return (
-        <AuthContext.Provider value={{ session, setSession }}>
+        <AuthContext.Provider value={{ session, setSession, clearSession }}>
             {children}
         </AuthContext.Provider>
     );
