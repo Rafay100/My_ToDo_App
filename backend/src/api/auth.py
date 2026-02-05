@@ -8,6 +8,7 @@ import os
 
 from src.db import get_session
 from src.models.models import User
+from src.api.auth_middleware import get_current_user
 
 router = APIRouter(prefix="/api/v1", tags=["auth"])
 
@@ -96,6 +97,23 @@ def signin(data: SigninRequest, response: Response, session: Session = Depends(g
     )
 
     return {"message": "Sign in successful", "user_id": str(user.id)}
+
+
+@router.get("/me")
+def get_current_user_info(user_id: str = Depends(get_current_user), session: Session = Depends(get_session)):
+    from uuid import UUID
+    user_uuid = UUID(user_id)
+    user = session.get(User, user_uuid)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return {
+        "id": str(user.id),
+        "name": user.name,
+        "email": user.email,
+        "created_at": user.created_at
+    }
 
 
 @router.post("/signout")

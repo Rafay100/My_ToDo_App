@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Moon, Sun, Menu, X, MessageSquare, ListTodo, Settings, Bell, Search, Plus, Filter, Calendar, Tag, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
@@ -17,6 +18,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
   const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
 
   // Close panels on mobile screens (client-side only)
   useEffect(() => {
@@ -107,6 +109,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
                     <Button
                       variant="ghost"
                       className="w-full justify-start gap-3 px-3 py-2 rounded-lg"
+                      onClick={() => router.push('/chat')}
                     >
                       <MessageSquare className="h-4 w-4" />
                       <span>AI Chat</span>
@@ -116,6 +119,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
                     <Button
                       variant="ghost"
                       className="w-full justify-start gap-3 px-3 py-2 rounded-lg"
+                      onClick={() => router.push('/dashboard')}
                     >
                       <ListTodo className="h-4 w-4" />
                       <span>Tasks</span>
@@ -125,6 +129,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
                     <Button
                       variant="ghost"
                       className="w-full justify-start gap-3 px-3 py-2 rounded-lg"
+                      onClick={() => router.push('/calendar')}
                     >
                       <Calendar className="h-4 w-4" />
                       <span>Calendar</span>
@@ -134,6 +139,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
                     <Button
                       variant="ghost"
                       className="w-full justify-start gap-3 px-3 py-2 rounded-lg"
+                      onClick={() => router.push('/tags')}
                     >
                       <Tag className="h-4 w-4" />
                       <span>Tags</span>
@@ -152,6 +158,7 @@ export default function AppLayout({ children, sidebarContent, rightPanelContent 
                         <Button
                           variant="ghost"
                           className="w-full justify-start gap-3 px-3 py-2 rounded-lg text-left"
+                          onClick={() => router.push(`/chat/conversation-${item}`)}
                         >
                           <MessageSquare className="h-3 w-3 text-muted-foreground" />
                           <span className="truncate">Conversation {item}</span>

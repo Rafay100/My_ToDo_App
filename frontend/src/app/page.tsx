@@ -1,27 +1,51 @@
 "use client";
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../components/auth-provider';
 import HomePage from './home-page';
-import AppLayout from '../components/AppLayout';
-import EnhancedChatInterface from '../components/EnhancedChatInterface';
 
 export default function Home() {
   const router = useRouter();
-  const { session } = useAuth();
+  const { session, clearSession } = useAuth();
+  const [validatingSession, setValidatingSession] = useState(false);
 
-  // If user is authenticated, redirect to dashboard
+  // Validate session with backend before redirecting
   useEffect(() => {
-    if (session) {
-      router.push('/dashboard');
-    }
-  }, [session, router]);
+    const validateSession = async () => {
+      if (session) {
+        setValidatingSession(true);
+        try {
+          // Make a request to validate the session
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/v1/me`, {
+            credentials: "include",
+          });
 
-  // If not authenticated, show the homepage
-  if (session) {
-    return null; // Will redirect via useEffect
+          if (response.ok) {
+            // Session is valid, redirect to dashboard
+            router.push('/dashboard');
+          } else {
+            // Session is invalid, clear it and show homepage
+            clearSession();
+          }
+        } catch (error) {
+          console.error('Error validating session:', error);
+          // If there's an error validating, clear the session and show homepage
+          clearSession();
+        } finally {
+          setValidatingSession(false);
+        }
+      }
+    };
+
+    validateSession();
+  }, [session, router, clearSession]);
+
+  // If validating or if there's no session, show the homepage
+  if ((session && validatingSession) || !session) {
+    return <HomePage />;
   }
 
-  return <HomePage />;
+  // If there's a valid session, redirect will happen via useEffect
+  return null;
 }

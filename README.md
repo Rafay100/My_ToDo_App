@@ -1,6 +1,53 @@
-# Evolution of Todo - Phase III (AI-Powered Chatbot)
+# TaskFlow AI - Spec-Driven Todo Application
 
-A stateless AI-powered todo chatbot that allows users to manage their tasks through natural language using OpenAI Agents SDK and MCP tools.
+## Project Structure
+
+This project follows the Spec-Kit methodology for spec-driven development:
+
+```
+├── specs/                 # Feature specifications
+│   └── todo-app/         # Todo application feature
+│       ├── spec.md       # Feature requirements
+│       ├── plan.md       # Architecture & implementation plan
+│       ├── tasks.md      # Implementation tasks
+│       └── intelligence/ # Requirements & research
+├── history/              # Development artifacts
+│   ├── specs/           # Historical specs
+│   ├── plans/           # Historical plans
+│   ├── tasks/           # Historical tasks
+│   ├── adrs/            # Architectural decision records
+│   └── prompts/         # AI interaction history
+├── frontend/            # Frontend application
+└── backend/             # Backend API
+```
+
+## Development Phases
+
+1. **Specification Phase**: Define requirements in `specs/todo-app/spec.md`
+2. **Planning Phase**: Design architecture in `specs/todo-app/plan.md`
+3. **Implementation Phase**: Execute tasks in `specs/todo-app/tasks.md`
+
+## Quick Start
+
+### Backend (API Server)
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+# Set DATABASE_URL and OPENAI_API_KEY environment variables
+uvicorn src.main:app --reload --port 8000
+```
+
+### Frontend (Web Application)
+```bash
+cd frontend
+npm install
+# Set NEXT_PUBLIC_API_URL in .env.local
+npm run dev
+```
+
+Both servers must run simultaneously for full functionality.
 
 ## Tech Stack
 
@@ -18,36 +65,6 @@ A stateless AI-powered todo chatbot that allows users to manage their tasks thro
 - Stateless architecture with no in-memory session state
 - MCP tools for task operations (add, list, update, complete, delete)
 - Database persistence for conversations and tasks
-
-## Quickstart
-
-### 1. Database Setup
-- Create a project on [Neon.tech](https://neon.tech)
-- Copy the connection string (with pooled connection enabled)
-
-### 2. Backend Setup
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-# Export DATABASE_URL and OPENAI_API_KEY
-uvicorn src.main:app --reload
-```
-
-### 3. Frontend Setup
-```bash
-cd frontend
-npm install
-# Set NEXT_PUBLIC_API_URL in .env.local
-npm run dev
-```
-
-## API Endpoints
-
-- `POST /api/{user_id}/chat` - Main chat endpoint for AI interactions
-- `GET /health` - Health check endpoint
-- `GET /api/{user_id}/conversations/{conversation_id}` - Get conversation history
 
 ## Phase Isolation
 
@@ -69,15 +86,6 @@ The system exposes the following MCP tools:
 - `update_task` - Modify existing tasks
 - `complete_task` - Mark tasks as completed
 - `delete_task` - Remove tasks
-
-## Development
-
-To run tests:
-```bash
-# Backend tests
-cd backend
-pytest tests/
-```
 
 ## Contributing
 

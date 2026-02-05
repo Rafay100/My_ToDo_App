@@ -33,7 +33,7 @@ export default function HomePage() {
             <Button
               size="lg"
               className="px-8 py-6 text-lg rounded-xl"
-              onClick={() => router.push('/signin')}
+              onClick={() => router.push('/new-auth/signin')}
             >
               Sign In to Continue
             </Button>
@@ -41,7 +41,7 @@ export default function HomePage() {
               size="lg"
               variant="outline"
               className="px-8 py-6 text-lg rounded-xl"
-              onClick={() => router.push('/signup')}
+              onClick={() => router.push('/new-auth/signup')}
             >
               Create Account
             </Button>

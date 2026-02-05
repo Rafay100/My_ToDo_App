@@ -50,7 +50,12 @@
       "Bash(dir)",
       "Bash(dir frontendsrcappdashboard)",
       "Bash(dir frontendsrcappdashboard*)",
-      "Bash(timeout 5 ping -n 1 localhost)"
+      "Bash(timeout 5 ping -n 1 localhost)",
+      "Bash(powershell Remove-Item:*)",
+      "Bash(powershell Rename-Item:*)",
+      "Bash(dir:*)",
+      "Bash(del:*)",
+      "Bash(node -e \"require\\(''fs''\\).rmSync\\(''C:/Users/SYED RAFAY/Desktop/My_ToDo/frontend/src/app/\\(auth\\)'', { recursive: true, force: true }\\); console.log\\(''Directory removed''\\);\")"
     ]
   }
 }

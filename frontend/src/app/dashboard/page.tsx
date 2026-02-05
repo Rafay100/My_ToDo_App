@@ -33,6 +33,21 @@ import TaskCard from "@/components/TaskCard";
 import { Badge } from "@/components/ui/badge";
 import { format, parseISO } from "date-fns";
 
+// Prevent hydration errors by ensuring this component only renders on the client
+const ClientOnly = ({ children }: { children: React.ReactNode }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return null;
+  }
+
+  return <>{children}</>;
+};
+
 export default function Dashboard() {
   const [todos, setTodos] = useState<any[]>([]);
   const [newTodo, setNewTodo] = useState("");
@@ -54,7 +69,7 @@ export default function Dashboard() {
   // Redirect to sign in if not authenticated
   useEffect(() => {
     if (!session) {
-      router.push('/signin');
+      router.push('/new-auth/signin');
     }
   }, [session, router]);
 
@@ -414,7 +429,13 @@ export default function Dashboard() {
                 className="h-12 px-6 gap-2 font-medium shadow-lg hover:shadow-xl transition-all rounded-xl"
                 size="lg"
               >
-                {isAdding ? <Loader2 className="h-5 w-5 animate-spin" /> : <Plus className="h-5 w-5" />}
+                {isAdding ? (
+                <div className="h-5 w-5 flex items-center justify-center">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </div>
+              ) : (
+                <Plus className="h-5 w-5" />
+              )}
                 <span className="hidden sm:inline">Add Task</span>
                 <span className="sm:hidden">Add</span>
               </Button>
@@ -427,7 +448,9 @@ export default function Dashboard() {
           {isLoading ? (
             <Card className="border-0 bg-card/30 backdrop-blur-sm">
               <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <div className="h-10 w-10 flex items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
                 <p className="text-sm text-muted-foreground font-medium">Loading your tasks...</p>
               </CardContent>
             </Card>
